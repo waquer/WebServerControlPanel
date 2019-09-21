@@ -1,2 +1,2 @@
-# wscp
-Web Server Control Panel
+# Web Server Control Panel
+apache mysql redis
