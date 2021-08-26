@@ -20,7 +20,7 @@ namespace wscp {
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e) {
-            string[] wss = { "Apache", "Mysql", "Redis" };
+            string[] wss = { "Apache", "Mysql", "Redis", "Nginx" };
             foreach (string ws in wss) {
                 ServiceController sc = new ServiceController(ws);
                 this.SetStatus(ws, this.CheckRunning(sc));
@@ -120,6 +120,10 @@ namespace wscp {
 
         private void Btn_redis_Click(object sender, RoutedEventArgs e) {
             this.BtnClick("Redis");
+        }
+
+        private void Btn_nginx_Click(object sender, RoutedEventArgs e) {
+            this.BtnClick("Nginx");
         }
 
         private void MainForm_StateChanged(object sender, EventArgs e) {
