@@ -16,7 +16,7 @@ namespace wscp {
         private readonly Brush GreenBrush = new SolidColorBrush(Colors.Green);
         private readonly Brush GrayBrush = new SolidColorBrush(Colors.Gray);
 
-        private string[] SCNameList = { "Apache", "MySQL", "Redis", "Nginx" };
+        private string[] SCNameList = { "Apache", "MySQL", "Redis", "nacos" };
         private Dictionary<String, ServiceController> SCDict = new Dictionary<String, ServiceController>();
 
         public MainWindow() {
@@ -138,8 +138,8 @@ namespace wscp {
             this.BtnClick("Redis");
         }
 
-        private void Btn_nginx_Click(object sender, RoutedEventArgs e) {
-            this.BtnClick("Nginx");
+        private void Btn_nacos_Click(object sender, RoutedEventArgs e) {
+            this.BtnClick("nacos");
         }
 
         private void MainForm_StateChanged(object sender, EventArgs e) {

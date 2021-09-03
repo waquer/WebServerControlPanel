@@ -24,10 +24,10 @@
         <Label Content="Redis" HorizontalAlignment="Left" Margin="30,100,0,0" VerticalAlignment="Top" Height="30"/>
         <Label x:Name="sta_redis" Content="Checking" HorizontalAlignment="Left" Margin="140,100,0,0" VerticalAlignment="Top" Height="30"/>
         <Button x:Name="btn_redis" Content="Button" HorizontalAlignment="Right" Margin="0,100,20,0" VerticalAlignment="Top" Width="75" Height="30" Click="Btn_redis_Click"/>
-        <!--Nginx-->
-        <Label Content="Nginx" HorizontalAlignment="Left" Margin="30,140,0,0" VerticalAlignment="Top" Height="30"/>
-        <Label x:Name="sta_nginx" Content="Checking" HorizontalAlignment="Left" Margin="140,140,0,0" VerticalAlignment="Top" Height="30"/>
-        <Button x:Name="btn_nginx" Content="Button" HorizontalAlignment="Right" Margin="0,140,20,0" VerticalAlignment="Top" Width="75" Height="30" Click="Btn_nginx_Click"/>
+        <!--nacos-->
+        <Label Content="nacos" HorizontalAlignment="Left" Margin="30,140,0,0" VerticalAlignment="Top" Height="30"/>
+        <Label x:Name="sta_nacos" Content="Checking" HorizontalAlignment="Left" Margin="140,140,0,0" VerticalAlignment="Top" Height="30"/>
+        <Button x:Name="btn_nacos" Content="Button" HorizontalAlignment="Right" Margin="0,140,20,0" VerticalAlignment="Top" Width="75" Height="30" Click="Btn_nacos_Click"/>
 
     </Grid>
 </Window>
