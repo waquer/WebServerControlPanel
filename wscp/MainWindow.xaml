@@ -3,31 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:wscp"
         mc:Ignorable="d"
         Title="Web Server Control Panel" Height="360" Width="400" Topmost="True" ResizeMode="CanMinimize" Loaded="Window_Loaded" Icon="Control Panel.ico" StateChanged="MainForm_StateChanged">
-    <Grid Background="WhiteSmoke">
+    <Grid x:Name="MainGrid" Background="WhiteSmoke">
         <Grid.RowDefinitions>
             <RowDefinition Height="190"/>
             <RowDefinition Height="190*"/>
         </Grid.RowDefinitions>
         <TextBox x:Name="NotifyText" Margin="5,0,5,5" Grid.Row="1" TextWrapping="Wrap" Text="" IsReadOnly="True"/>
-        <!--apache-->
+        <!--apache--><!--
         <Label Content="Apache" HorizontalAlignment="Left" Margin="30,20,0,0" VerticalAlignment="Top" Height="30"/>
         <Label x:Name="sta_apache" Content="Checking" HorizontalAlignment="Left" Margin="140,20,0,0" VerticalAlignment="Top" Height="30"/>
         <Button x:Name="btn_apache" Content="Button" HorizontalAlignment="Right" Margin="0,20,20,0" VerticalAlignment="Top" Width="75" Height="30" Click="Btn_apache_Click"/>
-        <!--Mysql-->
+        --><!--Mysql--><!--
         <Label Content="MySQL" HorizontalAlignment="Left" Margin="30,60,0,0" VerticalAlignment="Top" Height="30"/>
         <Label x:Name="sta_mysql" Content="Checking" HorizontalAlignment="Left" Margin="140,60,0,0" VerticalAlignment="Top" Height="30"/>
         <Button x:Name="btn_mysql" Content="Button" HorizontalAlignment="Right" Margin="0,60,20,0" VerticalAlignment="Top" Width="75" Height="30" Click="Btn_mysql_Click"/>
-        <!--Redis-->
+        --><!--Redis--><!--
         <Label Content="Redis" HorizontalAlignment="Left" Margin="30,100,0,0" VerticalAlignment="Top" Height="30"/>
         <Label x:Name="sta_redis" Content="Checking" HorizontalAlignment="Left" Margin="140,100,0,0" VerticalAlignment="Top" Height="30"/>
         <Button x:Name="btn_redis" Content="Button" HorizontalAlignment="Right" Margin="0,100,20,0" VerticalAlignment="Top" Width="75" Height="30" Click="Btn_redis_Click"/>
-        <!--nacos-->
+        --><!--nacos--><!--
         <Label Content="nacos" HorizontalAlignment="Left" Margin="30,140,0,0" VerticalAlignment="Top" Height="30"/>
         <Label x:Name="sta_nacos" Content="Checking" HorizontalAlignment="Left" Margin="140,140,0,0" VerticalAlignment="Top" Height="30"/>
-        <Button x:Name="btn_nacos" Content="Button" HorizontalAlignment="Right" Margin="0,140,20,0" VerticalAlignment="Top" Width="75" Height="30" Click="Btn_nacos_Click"/>
+        <Button x:Name="btn_nacos" Content="Button" HorizontalAlignment="Right" Margin="0,140,20,0" VerticalAlignment="Top" Width="75" Height="30" Click="Btn_nacos_Click"/>-->
 
     </Grid>
 </Window>
