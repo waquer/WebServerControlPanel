@@ -9,7 +9,7 @@ namespace wscp
 {
     internal class SCUtil
     {
-        private string scname;
+        private readonly string scName;
 
         private readonly ServiceController scInst;
 
@@ -24,13 +24,13 @@ namespace wscp
         private readonly Brush GrayBrush = new SolidColorBrush(Colors.Gray);
 
 
-        public SCUtil(string scname, int index, Grid mainGrid, TextBox txtNotify)
+        public SCUtil(string scname, int index, Grid mainGrid, TextBox notifyBox)
         {
             int top = 20 + 40 * index;
 
-            this.scname = scname;
+            this.scName = scname;
 
-            this.txtNotify = txtNotify;
+            this.txtNotify = notifyBox;
 
             this.scInst = new ServiceController(scname);
 
@@ -120,7 +120,7 @@ namespace wscp
                 {
                     return;
                 }
-                this.AddLog("Starting " + this.scname + "...");
+                this.AddLog("Starting " + this.scName + "...");
                 new Thread(() =>
                 {
                     this.scInst.Start();
@@ -128,7 +128,7 @@ namespace wscp
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         this.SetStatus(1);
-                        this.AddLog(this.scname + " is Running");
+                        this.AddLog(this.scName + " is Running");
                     }));
                 }).Start();
             }
@@ -147,7 +147,7 @@ namespace wscp
                     return;
                 }
 
-                this.AddLog("Stopping " + this.scname + "...");
+                this.AddLog("Stopping " + this.scName + "...");
                 new Thread(() =>
                 {
                     this.scInst.Stop();
@@ -155,7 +155,7 @@ namespace wscp
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
                         this.SetStatus(0);
-                        this.AddLog(this.scname + " is Stopped");
+                        this.AddLog(this.scName + " is Stopped");
                     }));
                 }).Start();
             }

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ServiceProcess;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
+using System.Windows.Forms;
 
 namespace wscp
 {
@@ -14,36 +10,28 @@ namespace wscp
 
         private readonly string[] SCNameList = { "Apache", "MySQL", "Redis", "nacos" };
 
-        private readonly Dictionary<String, SCUtil> SCDict = new Dictionary<String, SCUtil>(StringComparer.OrdinalIgnoreCase);
-
-        private readonly System.Windows.Forms.NotifyIcon notifyIcon = new System.Windows.Forms.NotifyIcon();
+        private readonly NotifyIcon notifyIcon;
 
         public MainWindow()
         {
             InitializeComponent();
+            this.notifyIcon = new NotifyIcon();
+            this.notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
+            this.notifyIcon.MouseClick += NotifyIcon_Click;
             this.Left = SystemParameters.WorkArea.Width - this.Width;
             this.Top = SystemParameters.WorkArea.Height - this.Height;
-            notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
-            notifyIcon.MouseClick += NotifyIcon_Click;
         }
 
         private void NotifyIcon_Click(object sender, EventArgs e)
         {
-            WindowState = WindowState.Normal;
+            this.WindowState = WindowState.Normal;
         }
 
         private void MainForm_StateChanged(object sender, EventArgs e)
         {
-            if (WindowState == WindowState.Minimized)
-            {
-                ShowInTaskbar = false;
-                notifyIcon.Visible = true;
-            }
-            else
-            {
-                ShowInTaskbar = true;
-                notifyIcon.Visible = false;
-            }
+            bool iconShow = WindowState == WindowState.Minimized;
+            this.notifyIcon.Visible = iconShow;
+            this.ShowInTaskbar = !iconShow;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -51,14 +39,8 @@ namespace wscp
             int i = 0;
             foreach (string scname in SCNameList)
             {
-                SCUtil scu = new SCUtil(scname, i++, MainGrid, NotifyText);
-                this.SCDict.Add(scname, scu);
+                new SCUtil(scname, i++, MainGrid, NotifyText);
             }
-        }
-
-        private void AddLog(string log)
-        {
-            NotifyText.AppendText(log + Environment.NewLine);
         }
 
     }
