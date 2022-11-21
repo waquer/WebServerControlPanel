@@ -5,11 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Web Server Control Panel" Height="360" Width="400" Topmost="True" ResizeMode="CanMinimize" Loaded="Window_Loaded" Icon="Control Panel.ico" StateChanged="MainForm_StateChanged">
-    <Grid x:Name="MainGrid" Background="WhiteSmoke">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="190"/>
-            <RowDefinition Height="190*"/>
-        </Grid.RowDefinitions>
-        <TextBox x:Name="NotifyText" Margin="5,0,5,5" Grid.Row="1" TextWrapping="Wrap" Text="" IsReadOnly="True"/>
-    </Grid>
+    <TabControl>
+        <TabItem Header="Control">
+            <Grid x:Name="MainGrid" Background="WhiteSmoke">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="190"/>
+                    <RowDefinition Height="190*"/>
+                </Grid.RowDefinitions>
+                <TextBox x:Name="NotifyText" Margin="5,0,5,5" Grid.Row="1" TextWrapping="Wrap" Text="" IsReadOnly="True"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Setting">
+            <Grid x:Name="SettingGrid" Background="WhiteSmoke">
+                
+                
+            </Grid>
+        </TabItem>
+    </TabControl>
 </Window>
