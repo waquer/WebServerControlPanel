@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Forms;
@@ -54,13 +53,55 @@ namespace wscp
 
         private void ServiceAdd_Click(object sender, RoutedEventArgs e)
         {
-
+            string name = ServiceNameText.Text;
+            if (name != null && name.Length > 0)
+            {
+                int SelectedIndex = ServiceNameList.SelectedIndex;
+                if (SelectedIndex >= 0)
+                {
+                    SCNameList.Insert(SelectedIndex, name);
+                }
+                else
+                {
+                    SCNameList.Add(name);
+                }
+                ServiceNameText.Clear();
+                RegUtil.SaveSCNameList(SCNameList);
+            }
         }
 
         private void ServiceDel_Click(object sender, RoutedEventArgs e)
         {
             int SelectedIndex = ServiceNameList.SelectedIndex;
-            SCNameList.RemoveAt(SelectedIndex);
+            if (SelectedIndex >= 0)
+            {
+                if (System.Windows.MessageBox.Show("确定要删除 " + ServiceNameList.SelectedItem + " ？", "删除项目", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                {
+                    SCNameList.RemoveAt(SelectedIndex);
+                    RegUtil.SaveSCNameList(SCNameList);
+                }
+            }
+        }
+
+        private void ServiceUp_Click(object sender, RoutedEventArgs e)
+        {
+            int SelectedIndex = ServiceNameList.SelectedIndex;
+            if (SelectedIndex > 0)
+            {
+                SCNameList.Move(SelectedIndex, SelectedIndex - 1);
+                RegUtil.SaveSCNameList(SCNameList);
+            }
+
+        }
+
+        private void ServiceDown_Click(object sender, RoutedEventArgs e)
+        {
+            int SelectedIndex = ServiceNameList.SelectedIndex;
+            if (SelectedIndex < ServiceNameList.Items.Count - 1)
+            {
+                SCNameList.Move(SelectedIndex, SelectedIndex + 1);
+                RegUtil.SaveSCNameList(SCNameList);
+            }
         }
 
     }

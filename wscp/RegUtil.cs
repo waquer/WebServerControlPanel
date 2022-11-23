@@ -59,7 +59,7 @@ namespace wscp
             return list?.Split(',');
         }
 
-        public static void SaveSCNameList(string[] list)
+        public static void SaveSCNameList(IEnumerable<string> list)
         {
             if (list == null)
             {

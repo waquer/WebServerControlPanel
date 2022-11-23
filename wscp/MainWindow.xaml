@@ -25,11 +25,12 @@
                     <RowDefinition Height="166"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <ListBox x:Name="ServiceNameList" Margin="10,10,0,10"/>
+                <ListBox x:Name="ServiceNameList" Margin="10,44,0,10"/>
+                <TextBox x:Name="ServiceNameText" Margin="10,10,0,0" VerticalAlignment="Top" Height="24" VerticalContentAlignment="Center" />
                 <Button x:Name="ServiceAdd" Grid.Column="1" Content="Add" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceAdd_Click"/>
-                <Button x:Name="ServiceDel" Grid.Column="1" Content="Del" HorizontalAlignment="Center" Margin="0,50,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceDel_Click"/>
-                <Button x:Name="ServiceUp" Grid.Column="1" Content="Up" HorizontalAlignment="Center" Margin="0,90,0,0" VerticalAlignment="Top" Width="60" Height="24"/>
-                <Button x:Name="ServiceDown" Grid.Column="1" Content="Down" HorizontalAlignment="Center" Margin="0,130,0,0" VerticalAlignment="Top" Width="60" Height="24"/>
+                <Button x:Name="ServiceDel" Grid.Column="1" Content="Delete" HorizontalAlignment="Center" Margin="0,130,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceDel_Click"/>
+                <Button x:Name="ServiceUp" Grid.Column="1" Content="Up" HorizontalAlignment="Center" Margin="0,50,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceUp_Click"/>
+                <Button x:Name="ServiceDown" Grid.Column="1" Content="Down" HorizontalAlignment="Center" Margin="0,90,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceDown_Click"/>
 
 
 
