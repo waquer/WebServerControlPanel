@@ -4,21 +4,35 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Web Server Control Panel" Height="360" Width="400" Topmost="True" ResizeMode="CanMinimize" Loaded="Window_Loaded" Icon="Control Panel.ico" StateChanged="MainForm_StateChanged">
+        Title="Web Server Control Panel" Height="360" Width="400" Topmost="True" ResizeMode="CanMinimize" Icon="Control Panel.ico" StateChanged="MainForm_StateChanged">
     <TabControl>
         <TabItem Header="Control">
             <Grid x:Name="MainGrid" Background="WhiteSmoke">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="190"/>
-                    <RowDefinition Height="190*"/>
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBox x:Name="NotifyText" Margin="5,0,5,5" Grid.Row="1" TextWrapping="Wrap" Text="" IsReadOnly="True"/>
             </Grid>
         </TabItem>
         <TabItem Header="Setting">
             <Grid x:Name="SettingGrid" Background="WhiteSmoke">
-                
-                
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="80"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="166"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <ListBox x:Name="ServiceNameList" Margin="10,10,0,10"/>
+                <Button x:Name="ServiceAdd" Grid.Column="1" Content="Add" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceAdd_Click"/>
+                <Button x:Name="ServiceDel" Grid.Column="1" Content="Del" HorizontalAlignment="Center" Margin="0,50,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceDel_Click"/>
+                <Button x:Name="ServiceUp" Grid.Column="1" Content="Up" HorizontalAlignment="Center" Margin="0,90,0,0" VerticalAlignment="Top" Width="60" Height="24"/>
+                <Button x:Name="ServiceDown" Grid.Column="1" Content="Down" HorizontalAlignment="Center" Margin="0,130,0,0" VerticalAlignment="Top" Width="60" Height="24"/>
+
+
+
             </Grid>
         </TabItem>
     </TabControl>

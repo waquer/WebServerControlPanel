@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -8,7 +10,7 @@ namespace wscp
     public partial class MainWindow : Window
     {
 
-        private readonly string[] SCNameList = { "Apache", "MySQL", "Redis", "nacos" };
+        private readonly ObservableCollection<string> SCNameList = new ObservableCollection<string>();
 
         private readonly NotifyIcon notifyIcon = new NotifyIcon();
 
@@ -19,12 +21,23 @@ namespace wscp
             this.Top = SystemParameters.WorkArea.Height - this.Height;
             this.notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
             this.notifyIcon.MouseClick += NotifyIcon_Click;
-            RegUtil regUtil = new RegUtil();
+            this.InitServiceNameList();
+            this.ServiceNameList.ItemsSource = SCNameList;
         }
 
-        private void NotifyIcon_Click(object sender, EventArgs e)
+        private void InitServiceNameList()
         {
-            this.WindowState = WindowState.Normal;
+            string[] scnames = RegUtil.GetSCNameList();
+            if (scnames == null || scnames.Length < 1)
+            {
+                scnames = new string[] { "Apache", "MySQL", "Redis", "nacos" };
+                RegUtil.SaveSCNameList(scnames);
+            }
+            for (int i = 0, len = scnames.Length; i < len; i++)
+            {
+                new SCUtil(scnames[i], i, MainGrid, NotifyText);
+                SCNameList.Add(scnames[i]);
+            }
         }
 
         private void MainForm_StateChanged(object sender, EventArgs e)
@@ -34,13 +47,20 @@ namespace wscp
             this.ShowInTaskbar = !iconShow;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void NotifyIcon_Click(object sender, EventArgs e)
         {
-            int i = 0;
-            foreach (string scname in SCNameList)
-            {
-                new SCUtil(scname, i++, MainGrid, NotifyText);
-            }
+            this.WindowState = WindowState.Normal;
+        }
+
+        private void ServiceAdd_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ServiceDel_Click(object sender, RoutedEventArgs e)
+        {
+            int SelectedIndex = ServiceNameList.SelectedIndex;
+            SCNameList.RemoveAt(SelectedIndex);
         }
 
     }
