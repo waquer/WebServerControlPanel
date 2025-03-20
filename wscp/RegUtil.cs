@@ -1,65 +1,62 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace wscp
 {
-    internal class RegUtil
+    internal static class RegUtil
     {
+        private const string RegistryKeyPath = @"SOFTWARE\MyLittleTools\WebServerControlPanel";
 
-        private static readonly string RegistryKeyPath = @"SOFTWARE\MyLittleTools\WebServerControlPanel";
-
-        private static readonly string ServiceListKey = "ServiceList";
+        private const string ServiceListKey = "ServiceList";
 
         private static RegistryKey GetKey()
         {
-            RegistryView useRegistryView = Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32;
-            RegistryKey hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, useRegistryView);
+            var useRegistryView =
+                Environment.Is64BitOperatingSystem ? RegistryView.Registry64 : RegistryView.Registry32;
+            var hklm = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, useRegistryView);
             return hklm.CreateSubKey(RegistryKeyPath, true);
         }
 
         // 读取注册表
-        public static string GetValue(string name)
+        private static string GetValue(string name)
         {
-            RegistryKey RegKey = GetKey();
-            string value = RegKey.GetValue(name)?.ToString();
-            RegKey.Close();
+            var regKey = GetKey();
+            var value = regKey.GetValue(name)?.ToString();
+            regKey.Close();
             return value;
         }
 
         // 写入注册表
-        public static void SaveValue(string name, string value, RegistryValueKind kind)
+        private static void SaveValue(string name, string value, RegistryValueKind kind)
         {
-            RegistryKey RegKey = GetKey();
-            RegKey.SetValue(name, value, kind);
-            RegKey.Close();
+            var regKey = GetKey();
+            regKey.SetValue(name, value, kind);
+            regKey.Close();
         }
 
-        public static void SaveValue(string name, string value)
+        private static void SaveValue(string name, string value)
         {
-            RegistryKey RegKey = GetKey();
-            RegKey.SetValue(name, value, RegistryValueKind.String);
-            RegKey.Close();
+            var regKey = GetKey();
+            regKey.SetValue(name, value, RegistryValueKind.String);
+            regKey.Close();
         }
 
         // 删除注册表
-        public static void DelValue(string name)
+        private static void DelValue(string name)
         {
-            RegistryKey RegKey = GetKey();
-            RegKey.DeleteValue(name);
-            RegKey.Close();
+            var regKey = GetKey();
+            regKey.DeleteValue(name);
+            regKey.Close();
         }
 
-        public static string[] GetSCNameList()
+        public static string[] GetScNameList()
         {
-            String list = GetValue(ServiceListKey);
+            var list = GetValue(ServiceListKey);
             return list?.Split(',');
         }
 
-        public static void SaveSCNameList(IEnumerable<string> list)
+        public static void SaveScNameList(IEnumerable<string> list)
         {
             if (list == null)
             {
@@ -67,9 +64,8 @@ namespace wscp
             }
             else
             {
-                SaveValue(ServiceListKey, String.Join(",", list));
+                SaveValue(ServiceListKey, string.Join(",", list));
             }
         }
-
     }
 }

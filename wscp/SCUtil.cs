@@ -7,34 +7,33 @@ using System.Windows.Media;
 
 namespace wscp
 {
-    internal class SCUtil
+    internal class ScUtil
     {
-        private readonly string scName;
+        private readonly string _scName;
 
-        private readonly ServiceController scInst;
+        private readonly ServiceController _scInst;
 
-        private readonly Label lblName;
-        private readonly Label lblStatus;
-        private readonly Button btnAction;
+        private readonly Label _lblStatus;
+        private readonly Button _btnAction;
 
-        private readonly TextBox txtNotify;
+        private readonly TextBox _txtNotify;
 
-        private readonly Brush RedBrush = new SolidColorBrush(Colors.Red);
-        private readonly Brush GreenBrush = new SolidColorBrush(Colors.Green);
-        private readonly Brush GrayBrush = new SolidColorBrush(Colors.Gray);
+        private readonly Brush _redBrush = new SolidColorBrush(Colors.Red);
+        private readonly Brush _greenBrush = new SolidColorBrush(Colors.Green);
+        private readonly Brush _grayBrush = new SolidColorBrush(Colors.Gray);
 
 
-        public SCUtil(string scname, int index, Grid mainGrid, TextBox notifyBox)
+        public ScUtil(string scname, int index, Grid mainGrid, TextBox notifyBox)
         {
-            int top = 20 + 40 * index;
+            var top = 20 + 40 * index;
 
-            this.scName = scname;
+            _scName = scname;
 
-            this.txtNotify = notifyBox;
+            _txtNotify = notifyBox;
 
-            this.scInst = new ServiceController(scname);
+            _scInst = new ServiceController(scname);
 
-            this.lblName = new Label()
+            var lblName = new Label()
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -42,9 +41,9 @@ namespace wscp
                 Height = 30,
                 Margin = new Thickness() { Left = 30, Top = top, Right = 0, Bottom = 0 }
             };
-            mainGrid.Children.Add(this.lblName);
+            mainGrid.Children.Add(lblName);
 
-            this.lblStatus = new Label()
+            _lblStatus = new Label()
             {
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -52,9 +51,9 @@ namespace wscp
                 Height = 30,
                 Margin = new Thickness() { Left = 140, Top = top, Right = 0, Bottom = 0 }
             };
-            mainGrid.Children.Add(this.lblStatus);
+            mainGrid.Children.Add(_lblStatus);
 
-            this.btnAction = new Button()
+            _btnAction = new Button()
             {
                 HorizontalAlignment = HorizontalAlignment.Right,
                 VerticalAlignment = VerticalAlignment.Top,
@@ -63,39 +62,44 @@ namespace wscp
                 Width = 75,
                 Margin = new Thickness() { Left = 0, Top = top, Right = 20, Bottom = 0 },
             };
-            this.btnAction.Click += this.BtnClick;
-            mainGrid.Children.Add(this.btnAction);
+            _btnAction.Click += BtnClick;
+            mainGrid.Children.Add(_btnAction);
 
-            this.SetStatus(this.CheckRunning());
+            SetStatus(CheckRunning());
+        }
 
+        public string GetScName()
+        {
+            return _scName;
         }
 
         private void SetStatus(int status)
         {
             if (status < 0)
             {
-                lblStatus.Foreground = GrayBrush;
-                lblStatus.Content = "Disabled";
-                btnAction.Content = "Disabled";
-                btnAction.Opacity = 0.5;
-                btnAction.IsEnabled = false;
+                _lblStatus.Foreground = _grayBrush;
+                _lblStatus.Content = "Disabled";
+                _btnAction.Content = "Disabled";
+                _btnAction.Opacity = 0.5;
+                _btnAction.IsEnabled = false;
             }
             else
             {
                 if (status > 0)
                 {
-                    lblStatus.Foreground = GreenBrush;
-                    lblStatus.Content = "Running";
-                    btnAction.Content = "Stop";
+                    _lblStatus.Foreground = _greenBrush;
+                    _lblStatus.Content = "Running";
+                    _btnAction.Content = "Stop";
                 }
                 else
                 {
-                    lblStatus.Foreground = RedBrush;
-                    lblStatus.Content = "Stopped";
-                    btnAction.Content = "Start";
+                    _lblStatus.Foreground = _redBrush;
+                    _lblStatus.Content = "Stopped";
+                    _btnAction.Content = "Start";
                 }
-                btnAction.Opacity = 1;
-                btnAction.IsEnabled = true;
+
+                _btnAction.Opacity = 1;
+                _btnAction.IsEnabled = true;
             }
         }
 
@@ -103,11 +107,11 @@ namespace wscp
         {
             try
             {
-                return this.scInst.Status != ServiceControllerStatus.Stopped ? 1 : 0;
+                return _scInst.Status != ServiceControllerStatus.Stopped ? 1 : 0;
             }
             catch (Exception e)
             {
-                this.AddLog(e.Message);
+                AddLog(e.Message);
                 return -1;
             }
         }
@@ -116,25 +120,26 @@ namespace wscp
         {
             try
             {
-                if (this.scInst.Status == ServiceControllerStatus.Running)
+                if (_scInst.Status == ServiceControllerStatus.Running)
                 {
                     return;
                 }
-                this.AddLog("Starting " + this.scName + "...");
+
+                AddLog("Starting " + _scName + "...");
                 new Thread(() =>
                 {
-                    this.scInst.Start();
-                    this.scInst.WaitForStatus(ServiceControllerStatus.Running);
+                    _scInst.Start();
+                    _scInst.WaitForStatus(ServiceControllerStatus.Running);
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        this.SetStatus(1);
-                        this.AddLog(this.scName + " is Running");
+                        SetStatus(1);
+                        AddLog(_scName + " is Running");
                     }));
                 }).Start();
             }
             catch (Exception e)
             {
-                this.AddLog("ERROR：" + e.Message);
+                AddLog("ERROR：" + e.Message);
             }
         }
 
@@ -142,47 +147,47 @@ namespace wscp
         {
             try
             {
-                if (this.scInst.Status == ServiceControllerStatus.Stopped)
+                if (_scInst.Status == ServiceControllerStatus.Stopped)
                 {
                     return;
                 }
 
-                this.AddLog("Stopping " + this.scName + "...");
+                AddLog("Stopping " + _scName + "...");
                 new Thread(() =>
                 {
-                    this.scInst.Stop();
-                    this.scInst.WaitForStatus(ServiceControllerStatus.Stopped);
+                    _scInst.Stop();
+                    _scInst.WaitForStatus(ServiceControllerStatus.Stopped);
                     Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        this.SetStatus(0);
-                        this.AddLog(this.scName + " is Stopped");
+                        SetStatus(0);
+                        AddLog(_scName + " is Stopped");
                     }));
                 }).Start();
             }
             catch (Exception e)
             {
-                this.AddLog("ERROR：" + e.Message);
+                AddLog("ERROR：" + e.Message);
             }
         }
+
         private void BtnClick(object sender, EventArgs e)
         {
-            btnAction.IsEnabled = false;
-            btnAction.Opacity = 0.5;
-            int status = this.CheckRunning();
+            _btnAction.IsEnabled = false;
+            _btnAction.Opacity = 0.5;
+            var status = this.CheckRunning();
             if (status > 0)
             {
-                this.StopService();
+                StopService();
             }
             else if (status == 0)
             {
-                this.StartService();
+                StartService();
             }
         }
 
         private void AddLog(string log)
         {
-            txtNotify.AppendText(log + Environment.NewLine);
+            _txtNotify.AppendText(log + Environment.NewLine);
         }
-
     }
 }

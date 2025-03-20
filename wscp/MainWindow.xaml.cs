@@ -1,109 +1,97 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Forms;
 
 namespace wscp
 {
-
     public partial class MainWindow : Window
     {
+        private readonly ObservableCollection<string> _scNameList = new ObservableCollection<string>();
 
-        private readonly ObservableCollection<string> SCNameList = new ObservableCollection<string>();
-
-        private readonly NotifyIcon notifyIcon = new NotifyIcon();
+        private readonly System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
 
         public MainWindow()
         {
             InitializeComponent();
-            this.Left = SystemParameters.WorkArea.Width - this.Width;
-            this.Top = SystemParameters.WorkArea.Height - this.Height;
-            this.notifyIcon.Icon = System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
-            this.notifyIcon.MouseClick += NotifyIcon_Click;
-            this.InitServiceNameList();
-            this.ServiceNameList.ItemsSource = SCNameList;
+            Left = SystemParameters.WorkArea.Width - Width;
+            Top = SystemParameters.WorkArea.Height - Height;
+            _notifyIcon.Icon =
+                System.Drawing.Icon.ExtractAssociatedIcon(System.Windows.Forms.Application.ExecutablePath);
+            _notifyIcon.MouseClick += NotifyIcon_Click;
+            InitServiceNameList();
+            ServiceNameList.ItemsSource = _scNameList;
         }
 
         private void InitServiceNameList()
         {
-            string[] scnames = RegUtil.GetSCNameList();
+            var scnames = RegUtil.GetScNameList();
             if (scnames == null || scnames.Length < 1)
             {
-                scnames = new string[] { "Apache", "MySQL", "Redis", "nacos" };
-                RegUtil.SaveSCNameList(scnames);
+                scnames = new[] { "Apache", "MySQL", "Redis" };
+                RegUtil.SaveScNameList(scnames);
             }
+
             for (int i = 0, len = scnames.Length; i < len; i++)
             {
-                new SCUtil(scnames[i], i, MainGrid, NotifyText);
-                SCNameList.Add(scnames[i]);
+                var util = new ScUtil(scnames[i], i, MainGrid, NotifyText);
+                _scNameList.Add(util.GetScName());
             }
         }
 
         private void MainForm_StateChanged(object sender, EventArgs e)
         {
-            bool iconShow = WindowState == WindowState.Minimized;
-            this.notifyIcon.Visible = iconShow;
-            this.ShowInTaskbar = !iconShow;
+            var iconShow = WindowState == WindowState.Minimized;
+            _notifyIcon.Visible = iconShow;
+            ShowInTaskbar = !iconShow;
         }
 
         private void NotifyIcon_Click(object sender, EventArgs e)
         {
-            this.WindowState = WindowState.Normal;
+            WindowState = WindowState.Normal;
         }
 
         private void ServiceAdd_Click(object sender, RoutedEventArgs e)
         {
-            string name = ServiceNameText.Text;
-            if (name != null && name.Length > 0)
+            var name = ServiceNameText.Text;
+            if (name.Length <= 0) return;
+            var selectedIndex = ServiceNameList.SelectedIndex;
+            if (selectedIndex >= 0)
             {
-                int SelectedIndex = ServiceNameList.SelectedIndex;
-                if (SelectedIndex >= 0)
-                {
-                    SCNameList.Insert(SelectedIndex, name);
-                }
-                else
-                {
-                    SCNameList.Add(name);
-                }
-                ServiceNameText.Clear();
-                RegUtil.SaveSCNameList(SCNameList);
+                _scNameList.Insert(selectedIndex, name);
             }
+            else
+            {
+                _scNameList.Add(name);
+            }
+
+            ServiceNameText.Clear();
+            RegUtil.SaveScNameList(_scNameList);
         }
 
         private void ServiceDel_Click(object sender, RoutedEventArgs e)
         {
-            int SelectedIndex = ServiceNameList.SelectedIndex;
-            if (SelectedIndex >= 0)
-            {
-                if (System.Windows.MessageBox.Show("确定要删除 " + ServiceNameList.SelectedItem + " ？", "删除项目", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
-                {
-                    SCNameList.RemoveAt(SelectedIndex);
-                    RegUtil.SaveSCNameList(SCNameList);
-                }
-            }
+            var selectedIndex = ServiceNameList.SelectedIndex;
+            if (selectedIndex < 0) return;
+            if (MessageBox.Show("确定要删除 " + ServiceNameList.SelectedItem + " ？", "删除项目", MessageBoxButton.OKCancel,
+                    MessageBoxImage.Question) != MessageBoxResult.OK) return;
+            _scNameList.RemoveAt(selectedIndex);
+            RegUtil.SaveScNameList(_scNameList);
         }
 
         private void ServiceUp_Click(object sender, RoutedEventArgs e)
         {
-            int SelectedIndex = ServiceNameList.SelectedIndex;
-            if (SelectedIndex > 0)
-            {
-                SCNameList.Move(SelectedIndex, SelectedIndex - 1);
-                RegUtil.SaveSCNameList(SCNameList);
-            }
-
+            var selectedIndex = ServiceNameList.SelectedIndex;
+            if (selectedIndex <= 0) return;
+            _scNameList.Move(selectedIndex, selectedIndex - 1);
+            RegUtil.SaveScNameList(_scNameList);
         }
 
         private void ServiceDown_Click(object sender, RoutedEventArgs e)
         {
-            int SelectedIndex = ServiceNameList.SelectedIndex;
-            if (SelectedIndex < ServiceNameList.Items.Count - 1)
-            {
-                SCNameList.Move(SelectedIndex, SelectedIndex + 1);
-                RegUtil.SaveSCNameList(SCNameList);
-            }
+            var selectedIndex = ServiceNameList.SelectedIndex;
+            if (selectedIndex >= ServiceNameList.Items.Count - 1) return;
+            _scNameList.Move(selectedIndex, selectedIndex + 1);
+            RegUtil.SaveScNameList(_scNameList);
         }
-
     }
-
 }
