@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace WebServerControlPanel
+namespace WebServerControlPanel.Utils
 {
     internal static class RegUtil
     {

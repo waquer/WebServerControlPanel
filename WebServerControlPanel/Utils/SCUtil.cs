@@ -5,7 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace WebServerControlPanel
+namespace WebServerControlPanel.Utils
 {
     internal class ScUtil
     {

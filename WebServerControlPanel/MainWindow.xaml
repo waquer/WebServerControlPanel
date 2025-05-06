@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" Background="WhiteSmoke"
         Title="Web Server Control Panel" Height="360" Width="400" Topmost="True" ResizeMode="CanMinimize"
-        Icon="Control Panel.ico" StateChanged="MainForm_StateChanged">
+        Icon="Resources/application.ico" StateChanged="MainForm_StateChanged">
     <TabControl>
         <TabItem Header="Control">
             <Grid x:Name="MainGrid">
