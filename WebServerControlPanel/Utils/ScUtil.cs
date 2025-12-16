@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace WebServerControlPanel.Utils
 {
@@ -18,10 +16,6 @@ namespace WebServerControlPanel.Utils
         private readonly Button _btnAction;
 
         private readonly TextBox _txtNotify;
-
-        private readonly Brush _redBrush = new SolidColorBrush(Colors.Red);
-        private readonly Brush _greenBrush = new SolidColorBrush(Colors.Green);
-        private readonly Brush _grayBrush = new SolidColorBrush(Colors.Gray);
 
         public string ScName
         {
@@ -77,7 +71,7 @@ namespace WebServerControlPanel.Utils
         {
             if (status < 0)
             {
-                _lblStatus.Foreground = _grayBrush;
+                _lblStatus.Foreground = ColorSet.grayBrush;
                 _lblStatus.Content = "Disabled";
                 _btnAction.Content = "Disabled";
                 _btnAction.Opacity = 0.5;
@@ -87,13 +81,13 @@ namespace WebServerControlPanel.Utils
             {
                 if (status > 0)
                 {
-                    _lblStatus.Foreground = _greenBrush;
+                    _lblStatus.Foreground = ColorSet.greenBrush;
                     _lblStatus.Content = "Running";
                     _btnAction.Content = "Stop";
                 }
                 else
                 {
-                    _lblStatus.Foreground = _redBrush;
+                    _lblStatus.Foreground = ColorSet.redBrush;
                     _lblStatus.Content = "Stopped";
                     _btnAction.Content = "Start";
                 }
