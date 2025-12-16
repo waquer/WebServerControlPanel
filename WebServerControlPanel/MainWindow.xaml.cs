@@ -9,6 +9,8 @@ namespace WebServerControlPanel
     {
         private readonly ObservableCollection<string> _scNameList = new ObservableCollection<string>();
 
+        private readonly ObservableCollection<ScItem> _scItemList = new ObservableCollection<ScItem>();
+
         private readonly System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
 
         public MainWindow()
@@ -21,6 +23,7 @@ namespace WebServerControlPanel
             _notifyIcon.MouseClick += NotifyIcon_Click;
             InitServiceNameList();
             ServiceNameList.ItemsSource = _scNameList;
+            ServiceNameGrid.ItemsSource = _scItemList;
         }
 
         private void InitServiceNameList()
@@ -36,6 +39,7 @@ namespace WebServerControlPanel
             {
                 var util = new ScUtil(scnames[i], i, MainGrid, NotifyText);
                 _scNameList.Add(util.GetScName());
+                _scItemList.Add(new ScItem(scnames[i], i));
             }
         }
 

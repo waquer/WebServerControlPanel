@@ -40,6 +40,13 @@
                     <Button x:Name="ServiceDown" Grid.Column="1" Content="Down" HorizontalAlignment="Center"
                             Margin="0,90,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceDown_Click" />
                 </Grid>
+                <DataGrid x:Name="ServiceNameGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
+                          FontSize="14" CanUserAddRows="True" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ID" Width="40" Binding="{Binding ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DataGridTextColumn Header="名称" Width="80" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </Grid>
         </TabItem>
     </TabControl>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using System.ServiceProcess;
 using System.Threading;
 using System.Windows;
@@ -22,6 +23,10 @@ namespace WebServerControlPanel.Utils
         private readonly Brush _greenBrush = new SolidColorBrush(Colors.Green);
         private readonly Brush _grayBrush = new SolidColorBrush(Colors.Gray);
 
+        public string ScName
+        {
+            get => _scName;
+        }
 
         public ScUtil(string scname, int index, Grid mainGrid, TextBox notifyBox)
         {
@@ -66,11 +71,6 @@ namespace WebServerControlPanel.Utils
             mainGrid.Children.Add(_btnAction);
 
             SetStatus(CheckRunning());
-        }
-
-        public string GetScName()
-        {
-            return _scName;
         }
 
         private void SetStatus(int status)
