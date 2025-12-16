@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.ServiceProcess;
 using System.Threading;
@@ -10,8 +11,7 @@ namespace WebServerControlPanel.Utils
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public void NotifyChanged([CallerMemberName] string propName = "")
-        {
+        public void NotifyChanged([CallerMemberName] string propName = "") {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));//全局通知(给监听此属性的控件)
         }
 
@@ -21,49 +21,45 @@ namespace WebServerControlPanel.Utils
 
         private readonly ServiceController scInst;
 
-        public int ID
-        {
+        public int ID {
             get => index;
         }
 
-        public string Name
-        {
+        public string Name {
             get => name;
         }
 
-        public ServiceControllerStatus Status
-        {
-            get => scInst.Status;
+        public string Status {
+            get {
+                try {
+                    return scInst.Status.ToString();
+                } catch (Exception e) {
+                    return "";
+                }
+            }
         }
 
-        public ScItem(string scname, int index)
-        {
+        public ScItem(string scname, int index) {
             this.name = scname;
             this.index = index;
             this.scInst = new ServiceController(scname);
         }
 
-        public void StartService()
-        {
-            if (Status == ServiceControllerStatus.Running)
-            {
+        public void StartService() {
+            if (scInst.Status == ServiceControllerStatus.Running) {
                 return;
             }
-            new Thread(() =>
-            {
+            new Thread(() => {
                 scInst.Start();
                 scInst.WaitForStatus(ServiceControllerStatus.Running);
             }).Start();
         }
 
-        public void StopService()
-        {
-            if (Status == ServiceControllerStatus.Stopped)
-            {
+        public void StopService() {
+            if (scInst.Status == ServiceControllerStatus.Stopped) {
                 return;
             }
-            new Thread(() =>
-            {
+            new Thread(() => {
                 scInst.Stop();
                 scInst.WaitForStatus(ServiceControllerStatus.Stopped);
             }).Start();

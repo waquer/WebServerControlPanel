@@ -43,8 +43,9 @@
                 <DataGrid x:Name="ServiceNameGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
                           FontSize="14" CanUserAddRows="True" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Width="40" Binding="{Binding ID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                        <DataGridTextColumn Header="名称" Width="80" Binding="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <DataGridTextColumn Header="ID" Width="40" Binding="{Binding ID}"/>
+                        <DataGridTextColumn Header="名称" Width="80" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="状态" Width="80" Binding="{Binding Status}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

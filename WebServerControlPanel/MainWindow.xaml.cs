@@ -38,7 +38,7 @@ namespace WebServerControlPanel
             for (int i = 0, len = scnames.Length; i < len; i++)
             {
                 var util = new ScUtil(scnames[i], i, MainGrid, NotifyText);
-                _scNameList.Add(util.GetScName());
+                _scNameList.Add(util.ScName);
                 _scItemList.Add(new ScItem(scnames[i], i));
             }
         }
