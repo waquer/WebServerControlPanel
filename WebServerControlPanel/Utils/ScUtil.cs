@@ -13,6 +13,7 @@ namespace WebServerControlPanel.Utils
         private readonly ServiceController _scInst;
 
         private readonly Label _lblStatus;
+
         private readonly Button _btnAction;
 
         private readonly TextBox _txtNotify;

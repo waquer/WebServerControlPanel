@@ -45,7 +45,7 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="ID" Width="40" Binding="{Binding ID}"/>
                         <DataGridTextColumn Header="名称" Width="80" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="状态" Width="80" Binding="{Binding Status}"/>
+                        <DataGridTextColumn Header="状态" Width="*" Binding="{Binding Status}"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>
