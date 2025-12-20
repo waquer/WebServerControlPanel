@@ -1,47 +1,61 @@
 ﻿using System;
-using System.Diagnostics;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.ServiceProcess;
 using System.Threading;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace WebServerControlPanel.Utils
 {
-    internal class ScItem
+    internal class ScItem : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        private readonly int index;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         private readonly string name;
 
         private readonly ServiceController scInst;
 
-        public ICommand ActionCommand { get; set; }
-
-        public ScItem(string scname, int index)
+        public ScItem(string scname)
         {
-            this.index = index;
             this.name = scname;
             this.scInst = new ServiceController(scname);
-            ActionCommand = new ScCommand(DoAction);
         }
 
-        private void DoAction(Object obj)
+        public string ServiceName
         {
-            Debug.WriteLine("dsfdsf");
+            get
+            {
+                try
+                {
+                    return scInst.ServiceName;
+                }
+                catch (Exception)
+                {
+                    return name;
+                }
+            }
         }
 
-        public int ID
+        public string DisplayName
         {
-            get => index;
+            get
+            {
+                try
+                {
+                    return scInst.DisplayName;
+                }
+                catch (Exception)
+                {
+                    return name;
+                }
+            }
         }
 
-        public string Name
-        {
-            get => name;
-        }
-
-        public string Status
+        public string StatusName
         {
             get
             {
@@ -56,7 +70,7 @@ namespace WebServerControlPanel.Utils
             }
         }
 
-        public string Action
+        public string ActionName
         {
             get
             {
@@ -90,12 +104,12 @@ namespace WebServerControlPanel.Utils
                 {
                     return;
                 }
-                AddLog("Starting " + Name + "...");
+                AddLog("Starting " + DisplayName + " ...");
                 new Thread(() =>
                 {
                     scInst.Start();
                     scInst.WaitForStatus(ServiceControllerStatus.Running);
-                    AddLog(Name + " is Running");
+                    AddLog(DisplayName + " is Running");
                 }).Start();
             }
             catch (Exception e)
@@ -112,12 +126,12 @@ namespace WebServerControlPanel.Utils
                 {
                     return;
                 }
-                AddLog("Stopping " + Name + "...");
+                AddLog("Stopping " + DisplayName + " ...");
                 new Thread(() =>
                 {
                     scInst.Stop();
                     scInst.WaitForStatus(ServiceControllerStatus.Stopped);
-                    AddLog(Name + " is Stopped");
+                    AddLog(DisplayName + " is Stopped");
                 }).Start();
             }
             catch (Exception e)

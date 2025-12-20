@@ -6,73 +6,63 @@
         mc:Ignorable="d" Background="WhiteSmoke"
         Title="Web Server Control Panel" Height="360" Width="400" Topmost="True" ResizeMode="CanMinimize"
         Icon="Resources/application.ico" StateChanged="MainForm_StateChanged">
-    <TabControl>
-        <TabItem Header="Control">
-            <Grid x:Name="MainGrid">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="100" />
-                </Grid.RowDefinitions>
-                <TextBox x:Name="NotifyText" Margin="5" Grid.Row="1" TextWrapping="Wrap" Text="" IsReadOnly="True"
-                         Grid.ColumnSpan="2" />
-            </Grid>
-        </TabItem>
-        <TabItem Header="Setting">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="166" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-                <Grid x:Name="SettingGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="80" />
-                    </Grid.ColumnDefinitions>
-                    <ListBox x:Name="ServiceNameList" Grid.Column="0" Margin="10,44,0,10" />
-                    <TextBox x:Name="ServiceNameText" Grid.Column="0" Margin="10,10,0,0" VerticalAlignment="Top"
+    <Grid x:Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="44" />
+            <RowDefinition Height="160" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid x:Name="SettingGrid" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="80" />
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="ServiceNameText" Grid.Column="0" Margin="10,10,0,0" VerticalAlignment="Top"
                              Height="24" VerticalContentAlignment="Center" />
-                    <Button x:Name="ServiceAdd" Grid.Column="1" Content="Add" HorizontalAlignment="Center"
+            <Button x:Name="ServiceAdd" Grid.Column="1" Content="Add" HorizontalAlignment="Center"
                             Margin="0,10,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceAdd_Click" />
-                    <Button x:Name="ServiceDel" Grid.Column="1" Content="Delete" HorizontalAlignment="Center"
-                            Margin="0,130,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceDel_Click" />
-                    <Button x:Name="ServiceUp" Grid.Column="1" Content="Up" HorizontalAlignment="Center"
-                            Margin="0,50,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceUp_Click" />
-                    <Button x:Name="ServiceDown" Grid.Column="1" Content="Down" HorizontalAlignment="Center"
-                            Margin="0,90,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceDown_Click" />
-                </Grid>
-                <DataGrid x:Name="ServiceNameGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
-                          CanUserAddRows="True" AutoGenerateColumns="False">
-                    <DataGrid.Resources>
-                        <Style x:Key="CenteredTextBlockStyle" TargetType="{x:Type TextBlock}">
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                            <Setter Property="FontSize" Value="13" />
-                            <Setter Property="Margin" Value="5"/>
-                        </Style>
-                    </DataGrid.Resources>
-                    <DataGrid.Columns>
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox Tag="{Binding ID}" VerticalAlignment="Center" Margin="5"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="名称" Width="80" Binding="{Binding Name, Mode=OneWay}"
+        </Grid>
+        <DataGrid x:Name="ServicesDataGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
+                          AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                          CanUserAddRows="False" CanUserDeleteRows="False"
+                          PreviewMouseRightButtonDown="ServicesDataGrid_PreviewMouseRightButtonDown">
+            <DataGrid.ContextMenu>
+                <ContextMenu x:Name="ServiceContextMenu">
+                    <MenuItem Header="上移" Click="ServiceUp_Click" x:Name="ServiceUpMenu"/>
+                    <MenuItem Header="下移" Click="ServiceDown_Click" x:Name="ServiceDownMenu"/>
+                    <Separator/>
+                    <MenuItem Header="从列表中删除" Click="ServiceDel_Click"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+            <DataGrid.Resources>
+                <Style x:Key="CenteredTextBlockStyle" TargetType="{x:Type TextBlock}">
+                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="FontSize" Value="13" />
+                    <Setter Property="Margin" Value="5"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox Tag="{Binding ID}" VerticalAlignment="Center" Margin="5"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="名称" Width="80" Binding="{Binding DisplayName, Mode=OneWay}"
                                             ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
-                        <DataGridTextColumn Header="状态" Width="*" Binding="{Binding Status, Mode=OneWay}"
+                <DataGridTextColumn Header="状态" Width="*" Binding="{Binding StatusName, Mode=OneWay}"
                                             ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
-                        <DataGridTemplateColumn Header="操作" Width="70">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Content="{Binding Action}" Margin="5" Padding="4,2,4,2" VerticalAlignment="Center"
-                                            Command="{Binding ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
-                                            CommandParameter="{Binding}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </Grid>
-        </TabItem>
-    </TabControl>
+                <DataGridTemplateColumn Header="操作" Width="70">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding ActionName}" Margin="5" Padding="4,2,4,2" VerticalAlignment="Center"
+                                            Click="ServiceAction_Click" Tag="{Binding}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBox x:Name="NotifyText" Margin="5" Grid.Row="2" TextWrapping="Wrap" Text="" IsReadOnly="True" />
+    </Grid>
 </Window>

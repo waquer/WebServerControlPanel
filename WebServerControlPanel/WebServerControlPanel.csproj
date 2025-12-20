@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>WebServerControlPanel</RootNamespace>
     <AssemblyName>WebServerControlPanel</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -87,10 +87,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="MainViewModel.cs" />
     <Compile Include="Utils\ColorSet.cs" />
     <Compile Include="Utils\RegUtil.cs" />
-    <Compile Include="Utils\ScCommand.cs" />
     <Compile Include="Utils\ScItem.cs" />
     <Compile Include="Utils\ScUtil.cs" />
     <Page Include="MainWindow.xaml">
