@@ -1,20 +1,14 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace WebServerControlPanel.Utils
 {
     internal class ScItem
     {
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public void NotifyChanged([CallerMemberName] string propName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));//全局通知(给监听此属性的控件)
-        }
 
         private readonly int index;
 
@@ -22,11 +16,19 @@ namespace WebServerControlPanel.Utils
 
         private readonly ServiceController scInst;
 
+        public ICommand ActionCommand { get; set; }
+
         public ScItem(string scname, int index)
         {
-            this.name = scname;
             this.index = index;
+            this.name = scname;
             this.scInst = new ServiceController(scname);
+            ActionCommand = new ScCommand(DoAction);
+        }
+
+        private void DoAction(Object obj)
+        {
+            Debug.WriteLine("dsfdsf");
         }
 
         public int ID
@@ -54,31 +56,79 @@ namespace WebServerControlPanel.Utils
             }
         }
 
+        public string Action
+        {
+            get
+            {
+                try
+                {
+                    if (scInst.Status == ServiceControllerStatus.Running)
+                    {
+                        return "Stop";
+                    }
+                    else if (scInst.Status == ServiceControllerStatus.Stopped)
+                    {
+                        return "Start";
+                    }
+                    else
+                    {
+                        return "Waiting";
+                    }
+                }
+                catch (Exception)
+                {
+                    return "Invalid";
+                }
+            }
+        }
+
         public void Start()
         {
-            if (scInst.Status == ServiceControllerStatus.Running)
+            try
             {
-                return;
+                if (scInst.Status == ServiceControllerStatus.Running)
+                {
+                    return;
+                }
+                AddLog("Starting " + Name + "...");
+                new Thread(() =>
+                {
+                    scInst.Start();
+                    scInst.WaitForStatus(ServiceControllerStatus.Running);
+                    AddLog(Name + " is Running");
+                }).Start();
             }
-            new Thread(() =>
+            catch (Exception e)
             {
-                scInst.Start();
-                scInst.WaitForStatus(ServiceControllerStatus.Running);
-            }).Start();
+                AddLog("ERROR：" + e.Message);
+            }
         }
 
         public void Stop()
         {
-            if (scInst.Status == ServiceControllerStatus.Stopped)
+            try
             {
-                return;
+                if (scInst.Status == ServiceControllerStatus.Stopped)
+                {
+                    return;
+                }
+                AddLog("Stopping " + Name + "...");
+                new Thread(() =>
+                {
+                    scInst.Stop();
+                    scInst.WaitForStatus(ServiceControllerStatus.Stopped);
+                    AddLog(Name + " is Stopped");
+                }).Start();
             }
-            new Thread(() =>
+            catch (Exception e)
             {
-                scInst.Stop();
-                scInst.WaitForStatus(ServiceControllerStatus.Stopped);
-            }).Start();
+                AddLog("ERROR：" + e.Message);
+            }
         }
 
+        private void AddLog(string log)
+        {
+            //
+        }
     }
 }

@@ -41,11 +41,35 @@
                             Margin="0,90,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceDown_Click" />
                 </Grid>
                 <DataGrid x:Name="ServiceNameGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
-                          FontSize="14" CanUserAddRows="True" AutoGenerateColumns="False">
+                          CanUserAddRows="True" AutoGenerateColumns="False">
+                    <DataGrid.Resources>
+                        <Style x:Key="CenteredTextBlockStyle" TargetType="{x:Type TextBlock}">
+                            <Setter Property="VerticalAlignment" Value="Center"/>
+                            <Setter Property="FontSize" Value="13" />
+                            <Setter Property="Margin" Value="5"/>
+                        </Style>
+                    </DataGrid.Resources>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="ID" Width="40" Binding="{Binding ID}"/>
-                        <DataGridTextColumn Header="名称" Width="80" Binding="{Binding Name}"/>
-                        <DataGridTextColumn Header="状态" Width="*" Binding="{Binding Status}"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Tag="{Binding ID}" VerticalAlignment="Center" Margin="5"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTextColumn Header="名称" Width="80" Binding="{Binding Name, Mode=OneWay}"
+                                            ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                        <DataGridTextColumn Header="状态" Width="*" Binding="{Binding Status, Mode=OneWay}"
+                                            ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                        <DataGridTemplateColumn Header="操作" Width="70">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="{Binding Action}" Margin="5" Padding="4,2,4,2" VerticalAlignment="Center"
+                                            Command="{Binding ActionCommand, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" 
+                                            CommandParameter="{Binding}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

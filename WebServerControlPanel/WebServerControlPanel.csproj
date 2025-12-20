@@ -87,8 +87,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="Utils\ColorSet.cs" />
     <Compile Include="Utils\RegUtil.cs" />
+    <Compile Include="Utils\ScCommand.cs" />
     <Compile Include="Utils\ScItem.cs" />
     <Compile Include="Utils\ScUtil.cs" />
     <Page Include="MainWindow.xaml">
