@@ -8,19 +8,29 @@
         Icon="Resources/application.ico" StateChanged="MainForm_StateChanged">
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="44" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="160" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid x:Name="SettingGrid" Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="80" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="ServiceNameText" Grid.Column="0" Margin="10,10,0,0" VerticalAlignment="Top"
-                             Height="24" VerticalContentAlignment="Center" />
+
+            <ComboBox x:Name="ServiceSelectBox" Grid.Column="0" IsEditable="True" Text="输入或选择服务名称"
+                      SelectedValuePath="ServiceName" Margin="10, 10, 0, 10" VerticalContentAlignment="Center">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding ServiceName}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
             <Button x:Name="ServiceAdd" Grid.Column="1" Content="Add" HorizontalAlignment="Center"
-                            Margin="0,10,0,0" VerticalAlignment="Top" Width="60" Height="24" Click="ServiceAdd_Click" />
+                            Margin="10" Width="60" Height="24" Click="ServiceAdd_Click" />
         </Grid>
         <DataGrid x:Name="ServicesDataGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
                           AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"

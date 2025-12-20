@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.ServiceProcess;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Xaml;
 using WebServerControlPanel.Utils;
 
 namespace WebServerControlPanel
 {
     public partial class MainWindow
     {
+
+        private List<ServiceController> _allServices;
 
         private readonly ObservableCollection<ScItem> _scItemList = new ObservableCollection<ScItem>();
 
@@ -22,6 +26,7 @@ namespace WebServerControlPanel
             InitializeComponent();
             InitTrayAndPosition();
             InitServiceNameList();
+            LoadAllService();
         }
 
         private void InitTrayAndPosition()
@@ -50,6 +55,19 @@ namespace WebServerControlPanel
             ServicesDataGrid.ItemsSource = _scItemList;
         }
 
+        private void LoadAllService()
+        {
+            try
+            {
+                ServiceSelectBox.ItemsSource = ServiceController.GetServices().ToList();
+            }
+            catch (Exception ex)
+            {
+                var log = $"加载服务列表失败: {ex.Message}";
+                NotifyText.AppendText(log + Environment.NewLine);
+            }
+        }
+
         private void MainForm_StateChanged(object sender, EventArgs e)
         {
             var iconShow = WindowState == WindowState.Minimized;
@@ -74,7 +92,11 @@ namespace WebServerControlPanel
 
         private void ServiceAdd_Click(object sender, RoutedEventArgs e)
         {
-            var name = ServiceNameText.Text;
+
+            var value = ServiceSelectBox.SelectedValue;
+            var item = ServiceSelectBox.SelectedItem;
+
+            var name = ServiceSelectBox.Text;
             if (name.Length <= 0) return;
             var selectedIndex = ServicesDataGrid.SelectedIndex;
             var scitem = new ScItem(name);
@@ -87,7 +109,7 @@ namespace WebServerControlPanel
                 _scItemList.Add(scitem);
             }
 
-            ServiceNameText.Clear();
+            ServiceSelectBox.Text = null;
             UpdateScNameList();
         }
 
@@ -146,7 +168,8 @@ namespace WebServerControlPanel
                 // 更新菜单项状态
                 ServiceUpMenu.IsEnabled = selectedIdx > 0;
                 ServiceDownMenu.IsEnabled = selectedIdx < scItemsCount - 1;
-            } else
+            }
+            else
             {
                 ServiceUpMenu.IsEnabled = false;
                 ServiceDownMenu.IsEnabled = false;
