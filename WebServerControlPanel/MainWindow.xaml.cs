@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.ServiceProcess;
@@ -7,16 +6,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Xaml;
 using WebServerControlPanel.Utils;
 
 namespace WebServerControlPanel
 {
     public partial class MainWindow
     {
-
-        private List<ServiceController> _allServices;
-
         private readonly ObservableCollection<ScItem> _scItemList = new ObservableCollection<ScItem>();
 
         private readonly System.Windows.Forms.NotifyIcon _notifyIcon = new System.Windows.Forms.NotifyIcon();
@@ -49,7 +44,7 @@ namespace WebServerControlPanel
 
             for (int i = 0, len = scnames.Length; i < len; i++)
             {
-                _scItemList.Add(new ScItem(scnames[i]));
+                _scItemList.Add(new ScItem(scnames[i], NotifyText));
             }
 
             ServicesDataGrid.ItemsSource = _scItemList;
@@ -82,24 +77,18 @@ namespace WebServerControlPanel
 
         private void UpdateScNameList()
         {
-            List<string> names = new List<string>();
-            foreach (ScItem item in _scItemList)
-            {
-                names.Add(item.ServiceName);
-            }
+            var names = _scItemList.Select(item => item.ServiceName).ToList();
             RegUtil.SaveScNameList(names);
         }
 
         private void ServiceAdd_Click(object sender, RoutedEventArgs e)
         {
+            var item = (ServiceController)ServiceSelectBox.SelectedItem;
 
-            var value = ServiceSelectBox.SelectedValue;
-            var item = ServiceSelectBox.SelectedItem;
-
-            var name = ServiceSelectBox.Text;
+            var name = item.ServiceName;
             if (name.Length <= 0) return;
             var selectedIndex = ServicesDataGrid.SelectedIndex;
-            var scitem = new ScItem(name);
+            var scitem = new ScItem(name, NotifyText);
             if (selectedIndex >= 0)
             {
                 _scItemList.Insert(selectedIndex, scitem);
@@ -117,8 +106,11 @@ namespace WebServerControlPanel
         {
             var selectedIndex = ServicesDataGrid.SelectedIndex;
             if (selectedIndex < 0) return;
-            if (MessageBox.Show("确定要删除 " + ServicesDataGrid.SelectedItem + " ？", "删除项目", MessageBoxButton.OKCancel,
-                    MessageBoxImage.Question) != MessageBoxResult.OK) return;
+
+            var item = (ScItem)ServicesDataGrid.SelectedItem;
+
+            if (MessageBox.Show("确定要删除 " + item.ServiceName + " ？", "删除项目",
+                    MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK) return;
             _scItemList.RemoveAt(selectedIndex);
             UpdateScNameList();
         }
@@ -142,15 +134,13 @@ namespace WebServerControlPanel
         private void ServiceAction_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
-            ScItem service = (ScItem)button.Tag;
+            var service = (ScItem)button?.Tag;
             if (service == null) return;
-
-
         }
 
         private void ServicesDataGrid_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DependencyObject dep = (DependencyObject)e.OriginalSource;
+            var dep = (DependencyObject)e.OriginalSource;
 
             // 查找DataGridRow
             while ((dep != null) && !(dep is DataGridRow))

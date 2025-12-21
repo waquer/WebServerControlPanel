@@ -18,10 +18,7 @@ namespace WebServerControlPanel.Utils
 
         private readonly TextBox _txtNotify;
 
-        public string ScName
-        {
-            get => _scName;
-        }
+        public string ScName => _scName;
 
         public ScUtil(string scname, int index, Grid mainGrid, TextBox notifyBox)
         {
@@ -72,7 +69,7 @@ namespace WebServerControlPanel.Utils
         {
             if (status < 0)
             {
-                _lblStatus.Foreground = ColorSet.grayBrush;
+                _lblStatus.Foreground = ColorSet.GrayBrush;
                 _lblStatus.Content = "Disabled";
                 _btnAction.Content = "Disabled";
                 _btnAction.Opacity = 0.5;
@@ -82,13 +79,13 @@ namespace WebServerControlPanel.Utils
             {
                 if (status > 0)
                 {
-                    _lblStatus.Foreground = ColorSet.greenBrush;
+                    _lblStatus.Foreground = ColorSet.GreenBrush;
                     _lblStatus.Content = "Running";
                     _btnAction.Content = "Stop";
                 }
                 else
                 {
-                    _lblStatus.Foreground = ColorSet.redBrush;
+                    _lblStatus.Foreground = ColorSet.RedBrush;
                     _lblStatus.Content = "Stopped";
                     _btnAction.Content = "Start";
                 }

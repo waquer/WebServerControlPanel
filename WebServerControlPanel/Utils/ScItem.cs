@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.ServiceProcess;
 using System.Threading;
+using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace WebServerControlPanel.Utils
 {
@@ -10,19 +12,22 @@ namespace WebServerControlPanel.Utils
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private readonly string name;
+        private readonly string _name;
 
-        private readonly ServiceController scInst;
+        private readonly ServiceController _scInst;
 
-        public ScItem(string scname)
+        private readonly TextBox _notifyText;
+
+        public ScItem(string scname, TextBox notifyText)
         {
-            this.name = scname;
-            this.scInst = new ServiceController(scname);
+            this._name = scname;
+            this._scInst = new ServiceController(scname);
+            this._notifyText = notifyText;
         }
 
         public string ServiceName
@@ -31,11 +36,11 @@ namespace WebServerControlPanel.Utils
             {
                 try
                 {
-                    return scInst.ServiceName;
+                    return _scInst.ServiceName;
                 }
                 catch (Exception)
                 {
-                    return name;
+                    return _name;
                 }
             }
         }
@@ -46,11 +51,11 @@ namespace WebServerControlPanel.Utils
             {
                 try
                 {
-                    return scInst.DisplayName;
+                    return _scInst.DisplayName;
                 }
                 catch (Exception)
                 {
-                    return name;
+                    return _name;
                 }
             }
         }
@@ -61,7 +66,7 @@ namespace WebServerControlPanel.Utils
             {
                 try
                 {
-                    return scInst.Status.ToString();
+                    return _scInst.Status.ToString();
                 }
                 catch (Exception e)
                 {
@@ -76,17 +81,14 @@ namespace WebServerControlPanel.Utils
             {
                 try
                 {
-                    if (scInst.Status == ServiceControllerStatus.Running)
+                    switch (_scInst.Status)
                     {
-                        return "Stop";
-                    }
-                    else if (scInst.Status == ServiceControllerStatus.Stopped)
-                    {
-                        return "Start";
-                    }
-                    else
-                    {
-                        return "Waiting";
+                        case ServiceControllerStatus.Running:
+                            return "Stop";
+                        case ServiceControllerStatus.Stopped:
+                            return "Start";
+                        default:
+                            return "Waiting";
                     }
                 }
                 catch (Exception)
@@ -100,15 +102,16 @@ namespace WebServerControlPanel.Utils
         {
             try
             {
-                if (scInst.Status == ServiceControllerStatus.Running)
+                if (_scInst.Status == ServiceControllerStatus.Running)
                 {
                     return;
                 }
+
                 AddLog("Starting " + DisplayName + " ...");
                 new Thread(() =>
                 {
-                    scInst.Start();
-                    scInst.WaitForStatus(ServiceControllerStatus.Running);
+                    _scInst.Start();
+                    _scInst.WaitForStatus(ServiceControllerStatus.Running);
                     AddLog(DisplayName + " is Running");
                 }).Start();
             }
@@ -122,15 +125,16 @@ namespace WebServerControlPanel.Utils
         {
             try
             {
-                if (scInst.Status == ServiceControllerStatus.Stopped)
+                if (_scInst.Status == ServiceControllerStatus.Stopped)
                 {
                     return;
                 }
+
                 AddLog("Stopping " + DisplayName + " ...");
                 new Thread(() =>
                 {
-                    scInst.Stop();
-                    scInst.WaitForStatus(ServiceControllerStatus.Stopped);
+                    _scInst.Stop();
+                    _scInst.WaitForStatus(ServiceControllerStatus.Stopped);
                     AddLog(DisplayName + " is Stopped");
                 }).Start();
             }
@@ -142,7 +146,7 @@ namespace WebServerControlPanel.Utils
 
         private void AddLog(string log)
         {
-            //
+            Dispatcher.CurrentDispatcher.Invoke(delegate { _notifyText.AppendText(log + Environment.NewLine); });
         }
     }
 }

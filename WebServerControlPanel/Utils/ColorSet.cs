@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace WebServerControlPanel.Utils
 {
-    internal class ColorSet
+    internal static class ColorSet
     {
+        public static readonly Brush RedBrush = new SolidColorBrush(Colors.Red);
 
-        public readonly static Brush redBrush = new SolidColorBrush(Colors.Red);
+        public static readonly Brush GreenBrush = new SolidColorBrush(Colors.Green);
 
-        public readonly static Brush greenBrush = new SolidColorBrush(Colors.Green);
-
-        public readonly static Brush grayBrush = new SolidColorBrush(Colors.Gray);
-
+        public static readonly Brush GrayBrush = new SolidColorBrush(Colors.Gray);
     }
 }

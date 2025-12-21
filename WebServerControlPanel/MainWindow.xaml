@@ -18,56 +18,57 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ComboBox x:Name="ServiceSelectBox" Grid.Column="0" IsEditable="True" Text="输入或选择服务名称"
-                      SelectedValuePath="ServiceName" Margin="10, 10, 0, 10" VerticalContentAlignment="Center">
+            <ComboBox x:Name="ServiceSelectBox" Grid.Column="0" IsEditable="True" TextSearch.TextPath="ServiceName"
+                      Margin="10, 10, 0, 10" VerticalContentAlignment="Center">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding ServiceName}" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding ServiceName}" />
+                            <TextBlock Text=": " />
+                            <TextBlock Text="{Binding DisplayName}" />
                         </StackPanel>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
             <Button x:Name="ServiceAdd" Grid.Column="1" Content="Add" HorizontalAlignment="Center"
-                            Margin="10" Width="60" Height="24" Click="ServiceAdd_Click" />
+                    Margin="10" Width="60" Height="24" Click="ServiceAdd_Click" />
         </Grid>
         <DataGrid x:Name="ServicesDataGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
-                          AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
-                          CanUserAddRows="False" CanUserDeleteRows="False"
-                          PreviewMouseRightButtonDown="ServicesDataGrid_PreviewMouseRightButtonDown">
+                  AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
+                  CanUserAddRows="False" CanUserDeleteRows="False"
+                  PreviewMouseRightButtonDown="ServicesDataGrid_PreviewMouseRightButtonDown">
             <DataGrid.ContextMenu>
                 <ContextMenu x:Name="ServiceContextMenu">
-                    <MenuItem Header="上移" Click="ServiceUp_Click" x:Name="ServiceUpMenu"/>
-                    <MenuItem Header="下移" Click="ServiceDown_Click" x:Name="ServiceDownMenu"/>
-                    <Separator/>
-                    <MenuItem Header="从列表中删除" Click="ServiceDel_Click"/>
+                    <MenuItem Header="上移" Click="ServiceUp_Click" x:Name="ServiceUpMenu" />
+                    <MenuItem Header="下移" Click="ServiceDown_Click" x:Name="ServiceDownMenu" />
+                    <Separator />
+                    <MenuItem Header="从列表中删除" Click="ServiceDel_Click" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
             <DataGrid.Resources>
                 <Style x:Key="CenteredTextBlockStyle" TargetType="{x:Type TextBlock}">
-                    <Setter Property="VerticalAlignment" Value="Center"/>
+                    <Setter Property="VerticalAlignment" Value="Center" />
                     <Setter Property="FontSize" Value="13" />
-                    <Setter Property="Margin" Value="5"/>
+                    <Setter Property="Margin" Value="5" />
                 </Style>
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <CheckBox Tag="{Binding ID}" VerticalAlignment="Center" Margin="5"/>
+                            <CheckBox Tag="{Binding ServiceName}" VerticalAlignment="Center" Margin="5" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="名称" Width="80" Binding="{Binding DisplayName, Mode=OneWay}"
-                                            ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                                    ElementStyle="{StaticResource CenteredTextBlockStyle}" />
                 <DataGridTextColumn Header="状态" Width="*" Binding="{Binding StatusName, Mode=OneWay}"
-                                            ElementStyle="{StaticResource CenteredTextBlockStyle}"/>
+                                    ElementStyle="{StaticResource CenteredTextBlockStyle}" />
                 <DataGridTemplateColumn Header="操作" Width="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="{Binding ActionName}" Margin="5" Padding="4,2,4,2" VerticalAlignment="Center"
-                                            Click="ServiceAction_Click" Tag="{Binding}" />
+                            <Button Content="{Binding ActionName}" Margin="5" Padding="4,2,4,2"
+                                    VerticalAlignment="Center" Click="ServiceAction_Click" Tag="{Binding}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
