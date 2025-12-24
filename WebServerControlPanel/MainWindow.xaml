@@ -35,7 +35,7 @@
         </Grid>
         <DataGrid x:Name="ServicesDataGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
                   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
-                  CanUserAddRows="False" CanUserDeleteRows="False"
+                  CanUserAddRows="False" CanUserDeleteRows="False" BorderThickness="0"
                   PreviewMouseRightButtonDown="ServicesDataGrid_PreviewMouseRightButtonDown">
             <DataGrid.ContextMenu>
                 <ContextMenu x:Name="ServiceContextMenu">
@@ -68,7 +68,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Content="{Binding ActionName}" Margin="5" Padding="4,2,4,2"
-                                    VerticalAlignment="Center" Click="ServiceAction_Click" Tag="{Binding}" />
+                                    VerticalAlignment="Center" Tag="{Binding}" IsEnabled="{Binding IsEnabled}"
+                                    Click="ServiceAction_Click" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
