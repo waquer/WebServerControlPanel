@@ -88,21 +88,15 @@ namespace WebServerControlPanel.Utils
             }
         }
 
+        private bool _isEnabled = true;
+
         public bool IsEnabled
         {
-            get
+            get => _isEnabled;
+            set
             {
-                try
-                {
-                    return _scInst.Status != ServiceControllerStatus.ContinuePending
-                           && _scInst.Status != ServiceControllerStatus.PausePending
-                           && _scInst.Status != ServiceControllerStatus.StartPending
-                           && _scInst.Status != ServiceControllerStatus.StopPending;
-                }
-                catch (Exception)
-                {
-                    return true;
-                }
+                _isEnabled = value;
+                OnPropertyChanged();
             }
         }
 
@@ -152,16 +146,17 @@ namespace WebServerControlPanel.Utils
                 {
                     return;
                 }
+
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    OnPropertyChanged(nameof(IsEnabled));
+                    IsEnabled = false;
                     _addLog("Starting " + DisplayName + " ...");
                     _scInst.Start();
                     _scInst.WaitForStatus(ServiceControllerStatus.Running);
                     _addLog(DisplayName + " is Running");
-                    OnPropertyChanged(nameof(IsEnabled));
                     OnPropertyChanged(nameof(StatusName));
                     OnPropertyChanged(nameof(ActionName));
+                    IsEnabled = true;
                 });
             }
             catch (Exception e)
@@ -178,16 +173,17 @@ namespace WebServerControlPanel.Utils
                 {
                     return;
                 }
+
                 Application.Current.Dispatcher.Invoke(() =>
                 {
-                    OnPropertyChanged(nameof(IsEnabled));
+                    IsEnabled = false;
                     _addLog("Stopping " + DisplayName + " ...");
                     _scInst.Stop();
                     _scInst.WaitForStatus(ServiceControllerStatus.Stopped);
                     _addLog(DisplayName + " is Stopped");
-                    OnPropertyChanged(nameof(IsEnabled));
                     OnPropertyChanged(nameof(StatusName));
                     OnPropertyChanged(nameof(ActionName));
+                    IsEnabled = true;
                 });
             }
             catch (Exception e)
