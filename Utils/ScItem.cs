@@ -2,10 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.ServiceProcess;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace WebServerControlPanel.Utils
 {
@@ -13,7 +10,8 @@ namespace WebServerControlPanel.Utils
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null) {
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
@@ -21,79 +19,116 @@ namespace WebServerControlPanel.Utils
 
         private readonly ServiceController _scInst;
 
-        private readonly Action<string> AddLog;
+        private readonly Action<string> _addLog;
 
-        public ScItem(string scname, Action<string> addLog) {
-            this._name = scname;
-            this._scInst = new ServiceController(scname);
-            this.AddLog = addLog;
+        public ScItem(string scname, Action<string> addLog)
+        {
+            _name = scname;
+            _scInst = new ServiceController(scname);
+            _addLog = addLog;
         }
 
-        public string ServiceName {
-            get {
-                try {
+        public string ServiceName
+        {
+            get
+            {
+                try
+                {
                     return _scInst.ServiceName;
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     return _name;
                 }
             }
         }
 
-        public string DisplayName {
-            get {
-                try {
+        public string DisplayName
+        {
+            get
+            {
+                try
+                {
                     return _scInst.DisplayName;
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     return _name;
                 }
             }
         }
 
-        public bool IsRunning {
-            get {
-                try {
+        public bool IsRunning
+        {
+            get
+            {
+                try
+                {
                     return _scInst.Status == ServiceControllerStatus.Running;
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     return false;
                 }
             }
         }
 
-        public bool IsStopped {
-            get {
-                try {
+        public bool IsStopped
+        {
+            get
+            {
+                try
+                {
                     return _scInst.Status == ServiceControllerStatus.Stopped;
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     return false;
                 }
             }
         }
 
-        public bool IsEnabled {
-            get {
-                try {
-                    return _scInst.Status != ServiceControllerStatus.ContinuePending && _scInst.Status != ServiceControllerStatus.PausePending
-                        && _scInst.Status != ServiceControllerStatus.StartPending && _scInst.Status != ServiceControllerStatus.StopPending;
-                } catch (Exception) {
+        public bool IsEnabled
+        {
+            get
+            {
+                try
+                {
+                    return _scInst.Status != ServiceControllerStatus.ContinuePending
+                           && _scInst.Status != ServiceControllerStatus.PausePending
+                           && _scInst.Status != ServiceControllerStatus.StartPending
+                           && _scInst.Status != ServiceControllerStatus.StopPending;
+                }
+                catch (Exception)
+                {
                     return true;
                 }
             }
         }
 
-        public string StatusName {
-            get {
-                try {
+        public string StatusName
+        {
+            get
+            {
+                try
+                {
                     return _scInst.Status.ToString();
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     return e.Message;
                 }
             }
         }
 
-        public string ActionName {
-            get {
-                try {
-                    switch (_scInst.Status) {
+        public string ActionName
+        {
+            get
+            {
+                try
+                {
+                    switch (_scInst.Status)
+                    {
                         case ServiceControllerStatus.Running:
                             return "Stop";
                         case ServiceControllerStatus.Stopped:
@@ -101,47 +136,64 @@ namespace WebServerControlPanel.Utils
                         default:
                             return "Waiting";
                     }
-                } catch (Exception) {
+                }
+                catch (Exception)
+                {
                     return "Invalid";
                 }
             }
         }
 
-        public void Start() {
-            try {
-                if (_scInst.Status == ServiceControllerStatus.Running) {
+        public void Start()
+        {
+            try
+            {
+                if (_scInst.Status == ServiceControllerStatus.Running)
+                {
                     return;
                 }
-
-                AddLog("Starting " + DisplayName + " ...");
-                Application.Current.Dispatcher.Invoke(() => {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    OnPropertyChanged(nameof(IsEnabled));
+                    _addLog("Starting " + DisplayName + " ...");
                     _scInst.Start();
                     _scInst.WaitForStatus(ServiceControllerStatus.Running);
-                    AddLog(DisplayName + " is Running");
-                    OnPropertyChanged(ServiceName);
+                    _addLog(DisplayName + " is Running");
+                    OnPropertyChanged(nameof(IsEnabled));
+                    OnPropertyChanged(nameof(StatusName));
+                    OnPropertyChanged(nameof(ActionName));
                 });
-            } catch (Exception e) {
-                AddLog("ERROR：" + e.Message);
+            }
+            catch (Exception e)
+            {
+                _addLog("ERROR：" + e.Message);
             }
         }
 
-        public void Stop() {
-            try {
-                if (_scInst.Status == ServiceControllerStatus.Stopped) {
+        public void Stop()
+        {
+            try
+            {
+                if (_scInst.Status == ServiceControllerStatus.Stopped)
+                {
                     return;
                 }
-
-                AddLog("Stopping " + DisplayName + " ...");
-                Application.Current.Dispatcher.Invoke(() => {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    OnPropertyChanged(nameof(IsEnabled));
+                    _addLog("Stopping " + DisplayName + " ...");
                     _scInst.Stop();
                     _scInst.WaitForStatus(ServiceControllerStatus.Stopped);
-                    AddLog(DisplayName + " is Stopped");
-                    OnPropertyChanged(ServiceName);
+                    _addLog(DisplayName + " is Stopped");
+                    OnPropertyChanged(nameof(IsEnabled));
+                    OnPropertyChanged(nameof(StatusName));
+                    OnPropertyChanged(nameof(ActionName));
                 });
-            } catch (Exception e) {
-                AddLog("ERROR：" + e.Message);
+            }
+            catch (Exception e)
+            {
+                _addLog("ERROR：" + e.Message);
             }
         }
-
     }
 }
