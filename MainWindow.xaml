@@ -36,6 +36,7 @@
         <DataGrid x:Name="ServicesDataGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
                   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
                   CanUserAddRows="False" CanUserDeleteRows="False" BorderThickness="0"
+                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="LightGray"
                   PreviewMouseRightButtonDown="ServicesDataGrid_PreviewMouseRightButtonDown">
             <DataGrid.ContextMenu>
                 <ContextMenu x:Name="ServiceContextMenu">
@@ -48,10 +49,35 @@
             <DataGrid.Resources>
                 <Style x:Key="CenteredTextBlockStyle" TargetType="{x:Type TextBlock}">
                     <Setter Property="VerticalAlignment" Value="Center" />
+                    <Setter Property="Foreground" Value="Black" />
                     <Setter Property="FontSize" Value="13" />
                     <Setter Property="Margin" Value="5" />
+                    <Style.Triggers>
+                        <Trigger Property="Text" Value="Stopped">
+                            <Setter Property="Foreground" Value="Red"></Setter>
+                        </Trigger>
+                        <Trigger Property="Text" Value="Running">
+                            <Setter Property="Foreground" Value="Green"></Setter>
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
             </DataGrid.Resources>
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="LightYellow"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
@@ -60,9 +86,9 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="名称" Width="80" Binding="{Binding DisplayName, Mode=OneWay}"
+                <DataGridTextColumn Header="名称" Width="*" Binding="{Binding DisplayName, Mode=OneWay}"
                                     ElementStyle="{StaticResource CenteredTextBlockStyle}" />
-                <DataGridTextColumn Header="状态" Width="*" Binding="{Binding StatusName, Mode=OneWay}"
+                <DataGridTextColumn Header="状态" Width="80" Binding="{Binding StatusName, Mode=OneWay}"
                                     ElementStyle="{StaticResource CenteredTextBlockStyle}" />
                 <DataGridTemplateColumn Header="操作" Width="70">
                     <DataGridTemplateColumn.CellTemplate>

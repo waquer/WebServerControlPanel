@@ -34,7 +34,7 @@ namespace WebServerControlPanel
         private void InitServiceNameList() {
             var scnames = RegUtil.GetScNameList();
             if (scnames == null || scnames.Length < 1) {
-                scnames = new[] { "Apache", "MySQL", "Redis" };
+                scnames = new[] { "Redis" };
                 RegUtil.SaveScNameList(scnames);
             }
 
@@ -91,7 +91,7 @@ namespace WebServerControlPanel
 
             var item = (ScItem)ServicesDataGrid.SelectedItem;
 
-            if (MessageBox.Show("确定要删除 " + item.ServiceName + " ？", "删除项目",
+            if (MessageBox.Show($"确定要删除{item.ServiceName}？", "删除项目",
                     MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK) return;
             _scItemList.RemoveAt(selectedIndex);
             UpdateScNameList();
@@ -115,7 +115,7 @@ namespace WebServerControlPanel
             var button = sender as Button;
             var service = (ScItem)button?.Tag;
             if (service == null) {
-                AddLog($"服务参数错误");
+                AddLog("服务参数错误");
             } else if (service.IsRunning) {
                 service.Stop();
             } else if (service.IsStopped) {
