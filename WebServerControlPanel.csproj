@@ -91,7 +91,6 @@
     <Compile Include="ServiceWindow.xaml.cs">
       <DependentUpon>ServiceWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Utils\ColorSet.cs" />
     <Compile Include="Utils\RegUtil.cs" />
     <Compile Include="Utils\ScItem.cs" />
     <Page Include="MainWindow.xaml">
