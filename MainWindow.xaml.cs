@@ -20,7 +20,6 @@ namespace WebServerControlPanel
             InitializeComponent();
             InitTrayAndPosition();
             InitServiceNameList();
-            LoadAllService();
         }
 
         private void InitTrayAndPosition() {
@@ -45,14 +44,6 @@ namespace WebServerControlPanel
             ServicesDataGrid.ItemsSource = _scItemList;
         }
 
-        private void LoadAllService() {
-            try {
-                ServiceSelectBox.ItemsSource = ServiceController.GetServices().ToList();
-            } catch (Exception ex) {
-                AddLog($"加载服务列表失败: {ex.Message}");
-            }
-        }
-
         private void MainForm_StateChanged(object sender, EventArgs e) {
             var iconShow = WindowState == WindowState.Minimized;
             _notifyIcon.Visible = iconShow;
@@ -66,6 +57,11 @@ namespace WebServerControlPanel
         private void UpdateScNameList() {
             var names = _scItemList.Select(item => item.ServiceName).ToList();
             RegUtil.SaveScNameList(names);
+        }
+
+        private void ServiceAll_Click(object sender, RoutedEventArgs e) {
+            var serviceWindow = new ServiceWindow();
+            serviceWindow.ShowDialog();
         }
 
         private void ServiceAdd_Click(object sender, RoutedEventArgs e) {

@@ -59,6 +59,49 @@ namespace WebServerControlPanel.Utils
             }
         }
 
+        public string StatusName
+        {
+            get
+            {
+                try
+                {
+                    return _scInst.Status.ToString();
+                }
+                catch (Exception e)
+                {
+                    return e.Message;
+                }
+            }
+        }
+
+        public string ActionName
+        {
+            get
+            {
+                try
+                {
+                    switch (_scInst.Status)
+                    {
+                        case ServiceControllerStatus.Running:
+                            return "Stop";
+                        case ServiceControllerStatus.Stopped:
+                        case ServiceControllerStatus.Paused:
+                            return "Start";
+                        case ServiceControllerStatus.PausePending:
+                        case ServiceControllerStatus.StartPending:
+                        case ServiceControllerStatus.StopPending:
+                        case ServiceControllerStatus.ContinuePending:
+                        default:
+                            return "Waiting";
+                    }
+                }
+                catch (Exception)
+                {
+                    return "Invalid";
+                }
+            }
+        }
+
         public bool IsRunning
         {
             get
@@ -101,44 +144,6 @@ namespace WebServerControlPanel.Utils
             }
         }
 
-        public string StatusName
-        {
-            get
-            {
-                try
-                {
-                    return _scInst.Status.ToString();
-                }
-                catch (Exception e)
-                {
-                    return e.Message;
-                }
-            }
-        }
-
-        public string ActionName
-        {
-            get
-            {
-                try
-                {
-                    switch (_scInst.Status)
-                    {
-                        case ServiceControllerStatus.Running:
-                            return "Stop";
-                        case ServiceControllerStatus.Stopped:
-                            return "Start";
-                        default:
-                            return "Waiting";
-                    }
-                }
-                catch (Exception)
-                {
-                    return "Invalid";
-                }
-            }
-        }
-
         public void Start()
         {
             try
@@ -148,41 +153,23 @@ namespace WebServerControlPanel.Utils
                     return;
                 }
 
-                // 在 UI 线程上更新按钮状态
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     IsEnabled = false;
                     _addLog("Starting " + DisplayName + " ...");
                 });
 
-                // 在后台线程上执行服务操作
                 Task.Run(() =>
                 {
-                    try
+                    _scInst.Start();
+                    _scInst.WaitForStatus(ServiceControllerStatus.Running);
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        _scInst.Start();
-                        _scInst.WaitForStatus(ServiceControllerStatus.Running);
-
-                        // 操作成功后在 UI 线程上更新状态
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            _addLog(DisplayName + " is Running");
-                            OnPropertyChanged(nameof(StatusName));
-                            OnPropertyChanged(nameof(ActionName));
-                            IsEnabled = true;
-                        });
-                    }
-                    catch (Exception e)
-                    {
-                        // 发生异常时在 UI 线程上更新状态
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            _addLog("ERROR：" + e.Message);
-                            OnPropertyChanged(nameof(StatusName));
-                            OnPropertyChanged(nameof(ActionName));
-                            IsEnabled = true;
-                        });
-                    }
+                        _addLog(DisplayName + " is Running");
+                        OnPropertyChanged(nameof(StatusName));
+                        OnPropertyChanged(nameof(ActionName));
+                        IsEnabled = true;
+                    });
                 });
             }
             catch (Exception e)
@@ -190,6 +177,8 @@ namespace WebServerControlPanel.Utils
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     _addLog("ERROR：" + e.Message);
+                    OnPropertyChanged(nameof(StatusName));
+                    OnPropertyChanged(nameof(ActionName));
                     IsEnabled = true;
                 });
             }
@@ -204,41 +193,24 @@ namespace WebServerControlPanel.Utils
                     return;
                 }
 
-                // 在 UI 线程上更新按钮状态
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     IsEnabled = false;
                     _addLog("Stopping " + DisplayName + " ...");
                 });
 
-                // 在后台线程上执行服务操作
                 Task.Run(() =>
                 {
-                    try
-                    {
-                        _scInst.Stop();
-                        _scInst.WaitForStatus(ServiceControllerStatus.Stopped);
+                    _scInst.Stop();
+                    _scInst.WaitForStatus(ServiceControllerStatus.Stopped);
 
-                        // 操作成功后在 UI 线程上更新状态
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            _addLog(DisplayName + " is Stopped");
-                            OnPropertyChanged(nameof(StatusName));
-                            OnPropertyChanged(nameof(ActionName));
-                            IsEnabled = true;
-                        });
-                    }
-                    catch (Exception e)
+                    Application.Current.Dispatcher.Invoke(() =>
                     {
-                        // 发生异常时在 UI 线程上更新状态
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            _addLog("ERROR：" + e.Message);
-                            OnPropertyChanged(nameof(StatusName));
-                            OnPropertyChanged(nameof(ActionName));
-                            IsEnabled = true;
-                        });
-                    }
+                        _addLog(DisplayName + " is Stopped");
+                        OnPropertyChanged(nameof(StatusName));
+                        OnPropertyChanged(nameof(ActionName));
+                        IsEnabled = true;
+                    });
                 });
             }
             catch (Exception e)
@@ -246,6 +218,8 @@ namespace WebServerControlPanel.Utils
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     _addLog("ERROR：" + e.Message);
+                    OnPropertyChanged(nameof(StatusName));
+                    OnPropertyChanged(nameof(ActionName));
                     IsEnabled = true;
                 });
             }
