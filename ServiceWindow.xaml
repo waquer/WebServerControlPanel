@@ -52,8 +52,9 @@
                 <DataGridTemplateColumn Header="操作" Width="70">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Button Content="123" Margin="5" Padding="4,2,4,2"
-                                    Tag="{Binding}" VerticalAlignment="Center" />
+                            <Button Content="添加" Margin="5" Padding="4,2,4,2"
+                                    Tag="{Binding}" VerticalAlignment="Center"
+                                    Click="AddService_Click"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

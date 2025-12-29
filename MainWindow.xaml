@@ -8,39 +8,17 @@
         Icon="Resources/application.ico" StateChanged="MainForm_StateChanged">
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="160" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Grid x:Name="SettingGrid" Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <ComboBox x:Name="ServiceSelectBox" Grid.Column="0" IsEditable="True" TextSearch.TextPath="ServiceName"
-                      Margin="10, 10, 0, 10" VerticalContentAlignment="Center">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="5">
-                            <TextBlock Text="{Binding ServiceName}" />
-                            <TextBlock Text=": " />
-                            <TextBlock Text="{Binding DisplayName}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
-            <Button x:Name="ServiceAdd" Grid.Column="1" Content="Add" HorizontalAlignment="Center"
-                    Margin="10" Width="60" Height="24" Click="ServiceAdd_Click" />
-        </Grid>
-        <DataGrid x:Name="ServicesDataGrid" Grid.Row="1" d:ItemsSource="{d:SampleData ItemCount=5}"
+        <DataGrid x:Name="ServicesDataGrid" Grid.Row="0" d:ItemsSource="{d:SampleData ItemCount=5}"
                   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
                   CanUserAddRows="False" CanUserDeleteRows="False" BorderThickness="0"
                   GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="LightGray"
                   PreviewMouseRightButtonDown="ServicesDataGrid_PreviewMouseRightButtonDown">
             <DataGrid.ContextMenu>
                 <ContextMenu x:Name="ServiceContextMenu">
-                    <MenuItem Header="添加" Click="ServiceAll_Click" />
+                    <MenuItem Header="添加" Click="ServiceAdd_Click" />
                     <Separator />
                     <MenuItem Header="上移" Click="ServiceUp_Click" x:Name="ServiceUpMenu" />
                     <MenuItem Header="下移" Click="ServiceDown_Click" x:Name="ServiceDownMenu" />
@@ -96,6 +74,6 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
-        <TextBox x:Name="NotifyText" Margin="5" Grid.Row="2" TextWrapping="Wrap" Text="" IsReadOnly="True" />
+        <TextBox x:Name="NotifyText" Margin="5" Grid.Row="1" TextWrapping="Wrap" Text="" IsReadOnly="True" />
     </Grid>
 </Window>
