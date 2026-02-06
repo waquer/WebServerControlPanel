@@ -14,7 +14,7 @@
         <DataGrid x:Name="ServicesDataGrid" Grid.Row="0" d:ItemsSource="{d:SampleData ItemCount=5}"
                   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
                   CanUserAddRows="False" CanUserDeleteRows="False" BorderThickness="0"
-                  GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="LightGray"
+                  HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray"
                   PreviewMouseRightButtonDown="ServicesDataGrid_PreviewMouseRightButtonDown">
             <DataGrid.ContextMenu>
                 <ContextMenu x:Name="ServiceContextMenu">

@@ -4,9 +4,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         mc:Ignorable="d" Title="ServiceWindow" Height="400" Width="600"
-        WindowStartupLocation="CenterScreen">
-    <Grid>
-        <DataGrid x:Name="AllSerivceDataGrid" d:ItemsSource="{d:SampleData ItemCount=5}"
+        Topmost="True" WindowStartupLocation="CenterScreen">
+    <Grid x:Name="ListGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" x:Name="ListFilter" Padding="5" Margin="5" TextChanged="ListFilter_TextChanged" />
+        <DataGrid Grid.Row="1" x:Name="AllSerivceDataGrid" d:ItemsSource="{d:SampleData ItemCount=5}"
                   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single"
                   CanUserAddRows="False" CanUserDeleteRows="False" BorderThickness="0"
                   HorizontalGridLinesBrush="LightGray" VerticalGridLinesBrush="LightGray">
@@ -43,7 +48,7 @@
                 </Style>
             </DataGrid.CellStyle>
             <DataGrid.Columns>
-                <DataGridTextColumn Header="名称" Width="80" Binding="{Binding ServiceName, Mode=OneWay}"
+                <DataGridTextColumn Header="名称" Width="120" Binding="{Binding ServiceName, Mode=OneWay}"
                                     ElementStyle="{StaticResource CenteredTextBlockStyle}" />
                 <DataGridTextColumn Header="描述" Width="*" Binding="{Binding DisplayName, Mode=OneWay}"
                                     ElementStyle="{StaticResource CenteredTextBlockStyle}" />
@@ -54,7 +59,7 @@
                         <DataTemplate>
                             <Button Content="添加" Margin="5" Padding="4,2,4,2"
                                     Tag="{Binding}" VerticalAlignment="Center"
-                                    Click="AddService_Click"/>
+                                    Click="AddService_Click" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

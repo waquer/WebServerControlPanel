@@ -97,6 +97,7 @@ namespace WebServerControlPanel.Utils
                 }
                 catch (Exception)
                 {
+                    IsEnabled = false;
                     return "Invalid";
                 }
             }
